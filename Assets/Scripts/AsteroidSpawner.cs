@@ -6,8 +6,8 @@ public class AsteroidSpawner : MonoBehaviour {
 
     public GameObject asteroidPrefab;
 
-    public float maxDistance,
-                 minDistance,
+    public float maxDistance = 22f,
+                 minDistance = 18f,
                  asteroidSpawnTime = 0.0f,
                  asteroidSpawnRate = 2.0f,
                  asteroidSpawnCount = 1f,
@@ -33,15 +33,11 @@ public class AsteroidSpawner : MonoBehaviour {
         }
 
         asteroidSpawnCount = Time.time * spawnCountRate;
-        /*if(Time.time > difficultyTime) {
-            
-            difficultyTime = Time.time * difficultyRate;
-        }*/
 	}
 
     private Vector2 GetRandomLocation() {
         float angle = Random.Range(-180, 180);
-        float radius = Random.Range(15f,20f);
+        float radius = Random.Range(minDistance, maxDistance);
         float x = Mathf.Sin(Mathf.Deg2Rad * angle) * radius;
         float y = Mathf.Cos(Mathf.Deg2Rad * angle) * radius;
         return new Vector2(x,y);

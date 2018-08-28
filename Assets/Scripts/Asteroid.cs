@@ -4,52 +4,61 @@ using UnityEngine;
 
 public class Asteroid : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-        //this.GetComponent<Rigidbody2D>().AddForce(new Vector2(100,0), ForceMode2D.Impulse);
-        //Vector2 initForce = 
-        //this.GetComponent<Rigidbody2D>().AddForce(new Vector2(10,0), ForceMode2D.Impulse);
+    public float debrisCount,
+                 speed = 0,
+                 drag = 0.1f,
+                 explosionStrength = 10f;
+
+    public Vector3 bulletDirectionVector,
+                   directionVector;
+
+    public GameObject explosionPrefab;
+    public GameObject debrisPrefab;
+
+
+    private void Update() {
+        speed -= drag;
+        if(speed <= 0) {
+            speed = 0;
+        } else {
+            transform.Translate(directionVector * speed * Time.deltaTime, Space.World);
+        }
     }
-	
-	// Update is called once per frame
-	void FixedUpdate () {
-        #region REAL PHYSICS
-        /*GameObject[] blackholes = GameObject.FindGameObjectsWithTag("Blackhole");
-        if(blackholes != null) {
-            foreach(GameObject obj in blackholes) {
-                Blackhole blackhole = obj.GetComponent<Blackhole>();
-                Rigidbody2D blackholeRigid = obj.GetComponent<Rigidbody2D>();
 
+    private void OnTriggerEnter2D(Collider2D other) {
+        if(other.gameObject.tag == "Entity") {
+            Bullet bulletEntity = other.gameObject.GetComponent<Bullet>();
 
-                // METHOD_1
+            if(bulletEntity != null) {
+                GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+                if(debrisPrefab != null) {
+                    bulletDirectionVector = bulletEntity.directionVector;
+                    float bulletAngle     = Mathf.Atan2(bulletDirectionVector.y, bulletDirectionVector.x) * Mathf.Rad2Deg;
+                    //Debug.Log("Angle:" + bulletAngle);
+                    float angleInterval   = 120 / debrisCount;
+                    float angleOffset     = angleInterval / 2;
+                    float angleInitial    = bulletAngle + 60 - angleOffset;
 
-                //float r = Vector2.Distance(obj.transform.position, this.transform.position);
-                //float totalForce = (blackhole.gravity * blackholeRigid.mass * this.GetComponent<Rigidbody2D>().mass) / (r * r);
-                //Vector2 force = (obj.transform.position - this.transform.position).normalized * totalForce;
+                    for(int i=0; i<debrisCount; i++) {
+                        GameObject debris = Instantiate(debrisPrefab, transform.position, Quaternion.identity);
+                        Asteroid debrisAsteroidComponent = debris.GetComponent<Asteroid>();
+                        debrisAsteroidComponent.speed = explosionStrength;
+                        float directionAngle = angleInitial - (angleInterval * i);
 
-                // METHOD_2
-                /*float r = Vector2.Distance(obj.transform.position, this.transform.position);
-                if(r <= blackhole.radius) {
-                    Debug.Log(r);
-                    this.GetComponent<Rigidbody2D>().AddForce(this.transform.position * -Mathf.Sqrt(blackhole.gravity * blackholeRigid.mass / r));
-                }*/
+                        if(directionAngle > 180) {
+                            directionAngle = -360 - directionAngle;
+                        } else if(directionAngle < -180) {
+                            directionAngle = 360 - directionAngle;
+                        }
 
-                // METHOD_3
-                /*float r = Vector2.Distance(obj.transform.position, this.transform.position);
-                if(r <= blackhole.radius) {
-                    Debug.Log(r);
-                    this.GetComponent<Rigidbody2D>().AddForce(this.transform.position * -Mathf.Sqrt(2 * blackhole.gravity * blackholeRigid.mass / r));
-                }*/
-
-                //float dist = difference.magnitude;
-                //Vector3 gravityDirection = difference.normalized;
-                //Vector3 gravityVector = (gravityDirection * blackhole.gravity) / (dist * dist);
-
-                //this.GetComponent<Rigidbody2D>().AddForce(force);
-            //}
-        //}
-        #endregion
-
-
+                        Vector3 direction = new Vector2(Mathf.Cos(directionAngle * Mathf.Deg2Rad), 
+                                                        Mathf.Sin(directionAngle * Mathf.Deg2Rad));
+                        debrisAsteroidComponent.directionVector = direction;
+                    }
+                }
+                Destroy(other.gameObject);
+                Destroy(this.gameObject);
+            }
+        }
     }
 }

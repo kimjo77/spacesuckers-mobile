@@ -13,11 +13,14 @@ public class Player : MonoBehaviour {
                  moveSpeed = 3f,
                  velX,
                  velY,
-                 dir;
-
-    public Camera camera;
+                 dir,
+                 maxRadius = 14f,
+                 fireRate = 0.2f,
+                 canFire = 0.0f;
 
     public GameObject cursor;
+
+    public GameObject bulletPrefab;
 
     public Joystick moveStick, 
                     shootStick;
@@ -31,6 +34,12 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        MovementJoystick();
+        ShootingJoyStick();
+        PlayerBounds();
+    }
+
+    private void MovementJoystick() {
         moveVector = (Vector3.right * moveStick.Horizontal + Vector3.up * moveStick.Vertical);
 
         if(moveVector != Vector3.zero) {
@@ -41,7 +50,7 @@ public class Player : MonoBehaviour {
             }
 
             transform.rotation = Quaternion.LookRotation(Vector3.forward, moveVector);
-            transform.Translate( moveVector * speed * Time.deltaTime, Space.World);
+            transform.Translate(moveVector * speed * Time.deltaTime, Space.World);
             moveVectorPrev = moveVector;
         } else {
             speed -= drag;
@@ -52,26 +61,31 @@ public class Player : MonoBehaviour {
 
             transform.Translate(moveVectorPrev * speed * Time.deltaTime, Space.World);
         }
-
+    }
+    private void ShootingJoyStick() {
         shootVector = (Vector3.right * shootStick.Horizontal + Vector3.up * shootStick.Vertical);
         shootDirection = shootStick.Direction;
 
         if(shootVector != Vector3.zero) {
             cursor.transform.rotation = Quaternion.LookRotation(Vector3.forward, shootVector);
 
-            cursor.transform.position = transform.position;      
+            cursor.transform.position = transform.position;
             cursor.transform.Translate(shootDirection.normalized * cursorRadius, Space.World);
-            //cursor.transform.Translate(shootVector.normalized * cursorRadius);
-            //cursor.transform.TransformDirection(shootStick.Direction.normalized * cursorRadius);
-            //cursor.transform.position = shootStick.Direction.normalized * cursorRadius;
 
+            if(Time.time > canFire) {
+                GameObject bullet = GameObject.Instantiate(bulletPrefab);
+                bullet.GetComponent<Bullet>().directionVector = shootDirection.normalized;
+                bullet.transform.SetPositionAndRotation(cursor.transform.position, cursor.transform.rotation);
+                canFire = Time.time + fireRate;
+            }
         }
-
-        camera.transform.position = transform.position;
-        camera.transform.rotation = Quaternion.identity;
     }
-
-    private void LateUpdate() {
-        camera.transform.SetPositionAndRotation(transform.position + new Vector3(0,0,-10) , Quaternion.identity);
+    private void PlayerBounds() {
+        float distance = Vector2.Distance(Vector2.zero, transform.position);
+        if(maxRadius < distance) {
+            Vector2 newVector = transform.position - Vector3.zero;
+            newVector = Vector2.ClampMagnitude(newVector, maxRadius);
+            transform.position = Vector2.zero + newVector;
+        }
     }
 }

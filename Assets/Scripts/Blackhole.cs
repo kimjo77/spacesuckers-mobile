@@ -37,7 +37,6 @@ public class Blackhole : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        Debug.Log(other.gameObject);
         if(other.gameObject.tag == "Entity") {
             Destroy(other.gameObject);
         }
