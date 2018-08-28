@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public Transform targetTransform;
+
+    public Vector3 offset = new Vector3(0,0,-11);
+
+    public float smoothSpeed = 0.125f;
+
+    private void LateUpdate() {
+        Vector3 desiredVector, smoothVector;
+        desiredVector = targetTransform.position + offset;
+        smoothVector = Vector3.Lerp(transform.position, desiredVector, smoothSpeed);
+        transform.position = smoothVector;
+    }
 }
