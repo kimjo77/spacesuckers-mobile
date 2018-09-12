@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Entity
   - Blackhole
+  - Network
+  - Button
+  - NetworkController
+  - Global
   layers:
   - Default
   - TransparentFX
