@@ -194,6 +194,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4216039900186550}
   - component: {fileID: 212933898516423672}
+  - component: {fileID: 50480150298401300}
+  - component: {fileID: 60214201239818672}
+  - component: {fileID: 114414464480872410}
   m_Layer: 0
   m_Name: Player
   m_TagString: Entity
@@ -218,7 +221,7 @@ GameObject:
   - component: {fileID: 114858814311625986}
   m_Layer: 0
   m_Name: Player Object
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -275,7 +278,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1835278023601230}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 795.74194, y: 228.5616, z: -10}
+  m_LocalPosition: {x: 2.0268266, y: 1.4605603, z: -10}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 4007914309023674}
@@ -337,6 +340,56 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!50 &50480150298401300
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1767247413532928}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!60 &60214201239818672
+PolygonCollider2D:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1767247413532928}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.32, y: 0.32}
+    newSize: {x: 0.32, y: 0.32}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.03, y: 0.15}
+      - {x: -0.06, y: 0}
+      - {x: -0.18, y: -0.14}
+      - {x: 0.18, y: -0.14}
+      - {x: 0.06, y: 0}
+      - {x: 0.03, y: 0.15}
 --- !u!81 &81813987561360822
 AudioListener:
   m_ObjectHideFlags: 1
@@ -415,7 +468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f60adff41896bc943b3ad6d4160de989, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 0.1
+  acceleration: 0.06
   drag: 0.1
   speed: 0
   maxSpeed: 5
@@ -427,13 +480,29 @@ MonoBehaviour:
   maxRadius: 11
   fireRate: 0.1
   canFire: 0
+  spriteString: 
+  spriteSet: 0
+  spriteSetInitial: 1
   cursor: {fileID: 1654429134742490}
   playerPrefab: {fileID: 1767247413532928}
   bulletPrefab: {fileID: 1571340413775312, guid: 614d48149ad15594e91d2f7ea066840b,
     type: 2}
+  ripplePrefab: {fileID: 0}
   moveStick: {fileID: 114457771899601398}
   shootStick: {fileID: 114135714933574432}
   pullVector: {x: 0, y: 0, z: 0}
+  bluePlayerSprite: {fileID: 21300000, guid: 64eeed9505e7c654b99bc561ad7e9270, type: 3}
+  redPlayerSprite: {fileID: 21300000, guid: fe480f577e36463458b7cbbcf4b43513, type: 3}
+  greenPlayerSprite: {fileID: 21300000, guid: ccebf05d95fc8eb4896b78035b42c9a2, type: 3}
+  orangePlayerSprite: {fileID: 21300000, guid: b92fb0429beeb2f46b2430dbc0516176, type: 3}
+  blueCursorSprite: {fileID: 21300000, guid: b36303f2fcdf8464596ec18beaf52ff4, type: 3}
+  redCursorSprite: {fileID: 21300000, guid: 3af6fc77b5d38434b9521cea4d3aee23, type: 3}
+  greenCursorSprite: {fileID: 21300000, guid: 2b6f639ffcf30184e95e147835ba42a5, type: 3}
+  orangeCursorSprite: {fileID: 21300000, guid: 862bb7a777897c343b2d0720c01db3a3, type: 3}
+  blueBulletSprite: {fileID: 21300000, guid: 74ccda1937c1b1f4e91701c49ab7d86a, type: 3}
+  redBulletSprite: {fileID: 21300000, guid: 31ce9266487d06f43b64242a678ce2cd, type: 3}
+  greenBulletSprite: {fileID: 21300000, guid: 98deb3d96a5464d42a4913f9ce564c23, type: 3}
+  orangeBulletSprite: {fileID: 21300000, guid: 8588975c2f1de1742ae73aaf5285cb64, type: 3}
 --- !u!114 &114114255019926308
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -707,6 +776,18 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114414464480872410
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1767247413532928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37c076f56d70f9f4b840fec085392f2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 1000
 --- !u!114 &114457771899601398
 MonoBehaviour:
   m_ObjectHideFlags: 1

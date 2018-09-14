@@ -5,7 +5,12 @@ using UnityEngine.Networking;
 
 public class Bullet : NetworkBehaviour {
 
+    public int damage = 50;
+
     public float speed, maxRadius;
+
+    [SyncVar]
+    public GameObject owner = null;
 
     public Vector3 directionVector;
 
@@ -16,6 +21,7 @@ public class Bullet : NetworkBehaviour {
     }
 
     void Update () {
+
         if(rb2D.velocity == Vector2.zero) {
             float angleRad = (transform.rotation.eulerAngles.z + 90) * Mathf.Deg2Rad;
             Vector3 velocityVector = new Vector2(Mathf.Cos(angleRad) * speed,
@@ -23,6 +29,7 @@ public class Bullet : NetworkBehaviour {
             rb2D.velocity = velocityVector;
             directionVector = velocityVector;
         }
+
         BulletBounds();
     }
 
