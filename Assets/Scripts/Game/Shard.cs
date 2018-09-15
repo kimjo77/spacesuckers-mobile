@@ -46,6 +46,7 @@ public class Shard : NetworkBehaviour {
             if(playerEntity != null) {
                 if(other.gameObject == owner) {
                     Debug.Log("ShardTaken");
+                    playerEntity.AddPoints(shardValue);
                     Destroy(this.gameObject);
                 }
             }

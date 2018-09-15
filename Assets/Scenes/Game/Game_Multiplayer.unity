@@ -368,7 +368,7 @@ Prefab:
     - target: {fileID: 114524972058159316, guid: d5cbe4983b7e5bb4b965d73d5f9b17eb,
         type: 2}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5cbe4983b7e5bb4b965d73d5f9b17eb, type: 2}
@@ -722,7 +722,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &1620509056
 AudioListener:
   m_ObjectHideFlags: 0
@@ -931,6 +931,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isCountDown: 0
   isTimer: 0
+  isGameBegin: 0
+  isGameEnd: 0
+  spawnPoints: []
+  playerPoints: 
 --- !u!224 &1775667802
 RectTransform:
   m_ObjectHideFlags: 0

@@ -18,19 +18,22 @@ public class Player : NetworkBehaviour {
                  dir,
                  maxRadius = 14f,
                  fireRate = 0.2f,
-                 canFire = 0.0f;
+                 canFire = 0.0f,
+                 respawnTime = 3;
 
     [SyncVar]
     public string spriteString = "";
     public bool spriteSet = false,
                 spriteSetInitial = true,
-                isLobbyObject = false;
+                isLobbyObject = false,
+                isDead = false,
+                isInGame = false;
 
     public GameObject cursor;
 
     public GameObject playerPrefab,
-                      bulletPrefab,
-                      ripplePrefab;
+                      bulletPrefab;
+    public CameraFollow camerafollow;
 
     public Joystick moveStick,
                     shootStick;
@@ -55,89 +58,30 @@ public class Player : NetworkBehaviour {
                   greenBulletSprite,
                   orangeBulletSprite;
 
+    public Global global = null;
+
     public override void OnStartLocalPlayer() {
-        if(SceneManager.GetActiveScene().name == "Screen_Lobby") {
-            isLobbyObject = true;
-        }
-
         CmdUpdateSprite();
-        //CmdRemoveDuplicate();
-        //Find Duplicate()
-
-        //find localplayer;
-        //get original objects [spaceship,cursor,bullet];
-        //set set original objects to player [current contolling player]
-        /*for(int i=0; i<playeObjects.Length; i++) {
-            NetworkLobbyPlayer networkLobbyPlayer = playeObjects[i].GetComponent<NetworkLobbyPlayer>();
-            Player playerEntity = playeObjects[i].GetComponent<Player>();
-
-            if(this == playerEntity) {
-                continue;
-            }
-
-            if(playerEntity.isLocalPlayer) {
-                //Set positions of prefab to current position
-                playerEntity.playerPrefab.transform.position = this.playerPrefab.transform.position;
-                playerEntity.cursor.transform.position       = this.cursor.transform.position;
-                playerEntity.bulletPrefab.transform.position = this.bulletPrefab.transform.position;
-
-                //Set prefabs to original lobby Prefabs
-                this.playerPrefab = playerEntity.playerPrefab;
-                this.cursor       = playerEntity.cursor;
-                this.bulletPrefab = playerEntity.bulletPrefab;
-
-                Destroy(playeObjects[i]);
-            }
-        }*/
-        if(!isLobbyObject) {
-            Debug.Log("IM A GAME PLAYER!!!");
-
-            GameObject[] playeObjects = GameObject.FindGameObjectsWithTag("Player");
-
-            for(int i = 0; i < playeObjects.Length; i++) {
-                Player playerEntity = playeObjects[i].GetComponent<Player>();
-
-                if(playerEntity.isLocalPlayer && playerEntity.isLobbyObject) {
-                    //Set positions of prefab to current position
-                    playerEntity.playerPrefab.transform.position = this.playerPrefab.transform.position;
-                    playerEntity.cursor.transform.position = this.cursor.transform.position;
-                    playerEntity.bulletPrefab.transform.position = this.bulletPrefab.transform.position;
-
-                    //Set prefabs to original lobby Prefabs
-                    this.playerPrefab = playerEntity.playerPrefab;
-                    this.cursor = playerEntity.cursor;
-                    this.bulletPrefab = playerEntity.bulletPrefab;
-
-                    //Delete the lobby player object
-                    Debug.Log("Deleting!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                    CmdDestroyObject(playeObjects[i]);
-                    break;
-                }
-            }
-        }
-    }
-
-    private void Start() {
-
     }
 
     // Update is called once per frame
     void Update() {
-        if(spriteSetInitial) {
-            CmdChangeSprite();
-            spriteSetInitial = true;
+        if(isInGame) {
+            if(global == null) {
+                //find global
+                global = FindObjectOfType<Global>();
+            }
+        } else {
+            if(SceneManager.GetActiveScene().name == "Game_Multiplayer") {
+                isInGame = true;
+            }
         }
 
-        /*if(!spriteSet) {
-            SetSpriteColor();
+        if(!isDead) {
+            MovementJoystick();
+            ShootingJoyStick();
         }
-
-        if(!isLocalPlayer) {
-            return;
-        }*/
-
-        MovementJoystick();
-        ShootingJoyStick();
+        
         PlayerBounds();
     }
 
@@ -191,6 +135,61 @@ public class Player : NetworkBehaviour {
         }
     }
 
+    public void SetSpawnPoint() {
+        NetworkStartPosition[] spawnPoints = FindObjectsOfType<NetworkStartPosition>();
+        Spaceship[] spaceships = FindObjectsOfType<Spaceship>();
+        float[] shortestDistance = new float[spawnPoints.Length];
+
+        if(spaceships.Length != 0) {
+            for(int i=0; i<shortestDistance.Length; i++) {
+                shortestDistance[i] = Vector2.Distance(spawnPoints[i].transform.position, spaceships[0].transform.position);
+            }
+
+            //foreach point - find the shortest distance between all spaceships - save sa shortest distance
+            for(int i=0; i<spawnPoints.Length; i++) {
+                for(int j=0; j<spaceships.Length; j++) {
+                    float distance = Vector2.Distance(spawnPoints[i].transform.position, spaceships[j].transform.position);
+                    if(distance < shortestDistance[i]) {
+                        shortestDistance[i] = distance;
+                    }
+                }
+            }
+
+            //foreach shortest distance - index of the farthest distance - save the index
+            int index = 0;
+            for(int i=0; i<shortestDistance.Length; i++) {
+                if(shortestDistance[index] < shortestDistance[i]) {
+                    index = i;
+                }
+            }
+
+            //spawn the player on the location of the point in the said index
+            playerPrefab.transform.position = spawnPoints[index].transform.position;
+        } else {
+            //spawn the player on the location of the point in the random index
+            playerPrefab.transform.position = spawnPoints[Random.Range(0,spawnPoints.Length)].transform.position;
+        }
+
+        
+    }
+
+    public void AddPoints(int value) {
+        global.AddPoints(this, value);
+    }
+
+    //--Respawing
+    public void Die() {
+        isDead = true;
+        playerPrefab.gameObject.SetActive(false);
+        StartCoroutine(DieRoutine());
+    }
+    public IEnumerator DieRoutine() {
+        yield return new WaitForSeconds(respawnTime);
+        SetSpawnPoint();
+        playerPrefab.gameObject.SetActive(true);
+        isDead = false;
+    }
+
     [Command]
     private void CmdShoot(GameObject owner) {
         GameObject bullet = GameObject.Instantiate(bulletPrefab);
@@ -204,27 +203,8 @@ public class Player : NetworkBehaviour {
     }
 
     [Command]
-    private void CmdChangeSprite() {
-        switch(GetComponent<NetworkLobbyPlayer>().slot) {
-            case 0:
-                spriteString = "blue";
-                break;
-            case 1:
-                spriteString = "red";
-                break;
-            case 2:
-                spriteString = "orange";
-                break;
-            case 3:
-                spriteString = "green";
-                break;
-        }
-        Debug.Log("Sprite sent! " + spriteString);
-    }
-
-    [Command]
     public void CmdUpdateSprite() {
-        RpcUpdateSprite(netId);
+        RpcUpdateSprite(this.netId);
 
         GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
         for(int i = 0; i < gameObjects.Length; i++) {
@@ -235,7 +215,7 @@ public class Player : NetworkBehaviour {
 
     [Command]
     public void CmdUpdateAllSprites() {
-        RpcUpdateSprite(netId);
+        RpcUpdateSprite(this.netId);
     }
 
     [ClientRpc]
@@ -246,29 +226,29 @@ public class Player : NetworkBehaviour {
         switch(networkLobbyPlayer.slot) {
             case 0:
                 playerEntity.playerPrefab.GetComponent<SpriteRenderer>().sprite = bluePlayerSprite;
-                playerEntity.cursor.GetComponent<SpriteRenderer>().sprite       = blueCursorSprite;
                 playerEntity.bulletPrefab.GetComponent<SpriteRenderer>().sprite = blueBulletSprite;
+                playerEntity.cursor.GetComponent<SpriteRenderer>().sprite       = blueCursorSprite;
                 break;
             case 1:
                 playerEntity.playerPrefab.GetComponent<SpriteRenderer>().sprite = redPlayerSprite;
-                playerEntity.cursor.GetComponent<SpriteRenderer>().sprite       = redCursorSprite;
                 playerEntity.bulletPrefab.GetComponent<SpriteRenderer>().sprite = redBulletSprite;
+                playerEntity.cursor.GetComponent<SpriteRenderer>().sprite       = redCursorSprite;
                 break;
             case 2:
                 playerEntity.playerPrefab.GetComponent<SpriteRenderer>().sprite = orangePlayerSprite;
-                playerEntity.cursor.GetComponent<SpriteRenderer>().sprite       = orangeCursorSprite;
                 playerEntity.bulletPrefab.GetComponent<SpriteRenderer>().sprite = orangeBulletSprite;
+                playerEntity.cursor.GetComponent<SpriteRenderer>().sprite       = orangeCursorSprite;
                 break;
             case 3:
                 playerEntity.playerPrefab.GetComponent<SpriteRenderer>().sprite = greenPlayerSprite;
-                playerEntity.cursor.GetComponent<SpriteRenderer>().sprite       = greenCursorSprite;
                 playerEntity.bulletPrefab.GetComponent<SpriteRenderer>().sprite = greenBulletSprite;
+                playerEntity.cursor.GetComponent<SpriteRenderer>().sprite       = greenCursorSprite;
                 break;
         }
     }
 
     [Command]
-    public void CmdDestroyObject(Object obj) {
+    public void CmdDestroyObject(GameObject obj) {
         //RpcGetPlayerDuplicateProperties();
         Destroy(obj);
     }

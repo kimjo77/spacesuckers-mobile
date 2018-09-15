@@ -14,9 +14,31 @@ public class Global : MonoBehaviour {
                   GameCountdownTimer;
 
     public bool isCountDown = false,
-                isTimer = false;
+                isTimer = false,
+                isGameBegin = false,
+                isGameEnd = false;
+
+    private NetworkStartPosition[] spawnPoints;
+    private Player[] players;
+    private int[] playerPoints;
 
     private void Start() {
+        //find all spawn points
+        spawnPoints = FindObjectsOfType<NetworkStartPosition>();
+        //find all players
+        players = FindObjectsOfType<Player>();
+
+        //setpositions for every spaceship
+        for(int i=0; i<players.Length; i++) {
+            players[i].playerPrefab.transform.position = spawnPoints[i].transform.position;
+        }
+
+        //initialize score for every player
+        playerPoints = new int[players.Length];
+        for(int i=0; i<playerPoints.Length; i++) {
+            playerPoints[i] = 0;
+        }
+
         //start timer for timer to start
         StartCountdownInitial = Time.time;
         StartCountdownTime = StartCountdownInitial + StartCountdownTimer;
@@ -28,6 +50,7 @@ public class Global : MonoBehaviour {
         if(isCountDown) {
             if(Time.time >= StartCountdownTime) {
                 isCountDown = false;
+                isGameBegin = true;
                 initializeTimer();
             }
         }
@@ -35,6 +58,7 @@ public class Global : MonoBehaviour {
         if(isTimer) {
             if(Time.time >= GameCountdownTimer) {
                 isTimer = false;
+                isGameEnd = true;
             }
         }
 
@@ -70,5 +94,25 @@ public class Global : MonoBehaviour {
         float minutes = Mathf.Floor(remainingTime / 60);
         float seconds = remainingTime % 60;
         return (minutes + ":" + seconds.ToString("0.00"));
+    }
+
+    public int GetScore(Player player) {
+        int index;
+        for(int i=0; i<players.Length; i++) {
+            if(players[i].netId == player.netId) {
+                return playerPoints[i];
+            }
+        }
+        return -1;
+    }
+
+    public void AddPoints(Player player, int value) {
+        int index;
+        for(int i = 0; i < players.Length; i++) {
+            if(players[i].netId == player.netId) {
+                playerPoints[i] += value;
+                break;
+            }
+        }
     }
 }
