@@ -10,6 +10,7 @@ TagManager:
   - Button
   - NetworkController
   - Global
+  - ScreenController
   layers:
   - Default
   - TransparentFX

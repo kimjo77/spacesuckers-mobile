@@ -5,8 +5,9 @@ using UnityEngine.Networking;
 
 public class AsteroidSpawner : NetworkBehaviour {
 
+    public Global global;
     public GameObject asteroidPrefab;
-
+    public int initialSpawnCount;
     public float maxDistance = 22f,
                  minDistance = 18f,
                  asteroidInitialTime,
@@ -16,6 +17,7 @@ public class AsteroidSpawner : NetworkBehaviour {
                  spawnCountRate = 0.2f,
                  difficultyTime = 1f,
                  difficultyRate = 3f;
+    private bool isInitial = false;
     private void Start() {
         asteroidSpawnTime = Time.time + asteroidSpawnTime;
         asteroidInitialTime = asteroidSpawnTime;
@@ -23,6 +25,18 @@ public class AsteroidSpawner : NetworkBehaviour {
 
     // Update is called once per frame
     void Update () {
+        if(global.isGameEnd) {
+            return;
+        }
+
+        if(!global.isGameBegin) {
+            return;
+        } else if(!isInitial) {
+            isInitial = true;
+            asteroidSpawnTime = Time.time + asteroidSpawnTime;
+            asteroidInitialTime = asteroidSpawnTime;
+        }
+
         if(Time.time > asteroidSpawnTime) {
             //Debug.Log(Mathf.FloorToInt(asteroidSpawnCount));
             for(int i=0; i< Mathf.FloorToInt(asteroidSpawnCount); i++) {
@@ -33,7 +47,7 @@ public class AsteroidSpawner : NetworkBehaviour {
             }
         }
 
-        asteroidSpawnCount = (Time.time - asteroidInitialTime) * spawnCountRate;
+        asteroidSpawnCount = ((Time.time - asteroidInitialTime) * spawnCountRate) + initialSpawnCount;
 	}
 
     private Vector2 GetRandomLocation() {

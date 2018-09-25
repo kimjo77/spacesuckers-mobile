@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4828049569111330}
   - component: {fileID: 114208297775284220}
+  - component: {fileID: 114298056255107312}
   m_Layer: 0
   m_Name: AsteroidSpawner
   m_TagString: Untagged
@@ -51,13 +52,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c83305736edc5874bb8cf359e28cbf7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  global: {fileID: 0}
   asteroidPrefab: {fileID: 1223327301498812, guid: e4cd796b2a623f64e94885ee459974dc,
     type: 2}
+  initialSpawnCount: 1
   maxDistance: 18
   minDistance: 22
+  asteroidInitialTime: 0
   asteroidSpawnTime: 0
   asteroidSpawnRate: 2
   asteroidSpawnCount: 1
-  spawnCountRate: 0.15
+  spawnCountRate: 0.093333
   difficultyTime: 1
   difficultyRate: 3
+--- !u!114 &114298056255107312
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1858901206465104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 83
+    i1: 223
+    i2: 81
+    i3: 243
+    i4: 91
+    i5: 215
+    i6: 226
+    i7: 180
+    i8: 11
+    i9: 247
+    i10: 204
+    i11: 89
+    i12: 192
+    i13: 32
+    i14: 2
+    i15: 156
+  m_ServerOnly: 1
+  m_LocalPlayerAuthority: 0

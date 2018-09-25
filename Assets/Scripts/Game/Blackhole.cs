@@ -7,9 +7,7 @@ public class Blackhole : NetworkBehaviour {
 
     public float gravity = 1;
     public float radius = 200;
-
-    private Player playerEntity;
-    private Asteroid asteroidEntity;
+    public int damage = 5000;
 
     // Use this for initialization
     void Start () {
@@ -39,7 +37,12 @@ public class Blackhole : NetworkBehaviour {
 
     private void OnTriggerEnter2D(Collider2D other) {
         if(other.gameObject.tag == "Entity") {
-            Destroy(other.gameObject);
+            Spaceship spaceshipEntity = other.GetComponent<Spaceship>();
+            if(spaceshipEntity != null) {
+                spaceshipEntity.Damage(damage);
+            } else {
+                Destroy(other.gameObject);
+            }
         }
     }
 }
