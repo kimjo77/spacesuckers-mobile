@@ -10,7 +10,8 @@ public class Bullet : NetworkBehaviour {
     public float speed, maxRadius;
 
     [SyncVar]
-    public GameObject owner = null;
+    public int ownerID;
+
 
     public Vector3 directionVector;
 

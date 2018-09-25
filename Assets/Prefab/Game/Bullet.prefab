@@ -157,7 +157,7 @@ MonoBehaviour:
   damage: 50
   speed: 20
   maxRadius: 20
-  owner: {fileID: 0}
+  ownerID: 0
   directionVector: {x: 0, y: 0, z: 0}
 --- !u!212 &212790993936136074
 SpriteRenderer:

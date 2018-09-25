@@ -110,13 +110,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84ea1316bf7ee4c47b6dd1af8eed4936, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shardValue: 25
-  owner: {fileID: 0}
+  shardValue: 50
+  destroyTime: 30
   smoothSpeed: 0.05
   drag: 0.1
   directionVector: {x: 0, y: 0, z: 0}
-  minSpeed: 5
-  maxSpeed: 10
+  minSpeed: 20
+  maxSpeed: 20
+  ownerID: -1
 --- !u!114 &114587612715949478
 MonoBehaviour:
   m_ObjectHideFlags: 1

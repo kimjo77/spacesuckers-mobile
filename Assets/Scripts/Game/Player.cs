@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class Player : NetworkBehaviour {
 
+    public int shardLimit = 20;
     //public float moveSpeed = 8f;
     public float acceleration = 0.5f,
                  drag = 0.1f,
@@ -32,7 +33,14 @@ public class Player : NetworkBehaviour {
     public GameObject cursor;
 
     public GameObject playerPrefab,
-                      bulletPrefab;
+                      bulletPrefab,
+                      shardPrefab;
+
+    public GameObject blueBulletPrefab, 
+                      redBulletPrefab, 
+                      greenBulletPrefab, 
+                      orangeBulletPrefab;
+
     public CameraFollow camerafollow;
 
     public Joystick moveStick,
@@ -173,8 +181,31 @@ public class Player : NetworkBehaviour {
         
     }
 
+    public void ScatterShards(int shardOwnerID, float shardDeductionPercentage) {
+        //Compute how many to produce
+        int shardCount, shardValue = shardPrefab.GetComponent<Shard>().shardValue;
+        int deductionValue = (int) (GetPoints() * shardDeductionPercentage);
+        DeductPoints(deductionValue);
+        shardCount = deductionValue / shardValue;
+
+        if(shardCount > shardLimit) {
+            shardValue = deductionValue / shardLimit;
+            shardCount = 20;
+        }
+
+        CmdProduceAndScatterShards(shardOwnerID, shardCount, shardValue);
+    }
+
     public void AddPoints(int value) {
-        global.AddPoints(this, value);
+        FindObjectOfType<Global>().AddPoints(this, value);
+    }
+
+    public int GetPoints() {
+        return FindObjectOfType<Global>().GetScore(this);
+    }
+
+    public void DeductPoints(int value) {
+        FindObjectOfType<Global>().DeductPoints(this, value);
     }
 
     //--Respawing
@@ -194,28 +225,38 @@ public class Player : NetworkBehaviour {
     private void CmdShoot(GameObject owner) {
         GameObject bullet = GameObject.Instantiate(bulletPrefab);
         Vector3 directionVector = shootDirection.normalized;
-        bullet.GetComponent<Bullet>().owner = owner;
-        bullet.GetComponent<Bullet>().directionVector = directionVector;
+
+        Bullet bulletEntity = bullet.GetComponent<Bullet>();
+
+        bulletEntity.ownerID = GetComponent<NetworkLobbyPlayer>().slot;
+        bulletEntity.directionVector = directionVector;
+
         bullet.transform.SetPositionAndRotation(cursor.transform.position, cursor.transform.rotation);
-        bullet.GetComponent<Rigidbody2D>().velocity = directionVector * bullet.GetComponent<Bullet>().speed;
+        bullet.GetComponent<Rigidbody2D>().velocity = directionVector * bulletEntity.speed;
         NetworkServer.Spawn(bullet);
         Debug.Log("Someone shot!");
     }
 
     [Command]
     public void CmdUpdateSprite() {
-        RpcUpdateSprite(this.netId);
 
-        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
+
+        /*GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
         for(int i = 0; i < gameObjects.Length; i++) {
             Player player = gameObjects[i].GetComponent<Player>();
             player.CmdUpdateAllSprites();
+        }*/
+        Player[] players = FindObjectsOfType<Player>();
+        for(int i = 0; i < players.Length; i++) {
+            players[i].CmdUpdateAllSprites();
         }
+
+        RpcUpdateSprite(netId);
     }
 
     [Command]
     public void CmdUpdateAllSprites() {
-        RpcUpdateSprite(this.netId);
+        RpcUpdateSprite(netId);
     }
 
     [ClientRpc]
@@ -226,24 +267,44 @@ public class Player : NetworkBehaviour {
         switch(networkLobbyPlayer.slot) {
             case 0:
                 playerEntity.playerPrefab.GetComponent<SpriteRenderer>().sprite = bluePlayerSprite;
-                playerEntity.bulletPrefab.GetComponent<SpriteRenderer>().sprite = blueBulletSprite;
+                playerEntity.bulletPrefab                                       = blueBulletPrefab;
                 playerEntity.cursor.GetComponent<SpriteRenderer>().sprite       = blueCursorSprite;
                 break;
             case 1:
                 playerEntity.playerPrefab.GetComponent<SpriteRenderer>().sprite = redPlayerSprite;
-                playerEntity.bulletPrefab.GetComponent<SpriteRenderer>().sprite = redBulletSprite;
+                playerEntity.bulletPrefab                                       = redBulletPrefab;
                 playerEntity.cursor.GetComponent<SpriteRenderer>().sprite       = redCursorSprite;
                 break;
             case 2:
                 playerEntity.playerPrefab.GetComponent<SpriteRenderer>().sprite = orangePlayerSprite;
-                playerEntity.bulletPrefab.GetComponent<SpriteRenderer>().sprite = orangeBulletSprite;
+                playerEntity.bulletPrefab                                       = orangeBulletPrefab;
                 playerEntity.cursor.GetComponent<SpriteRenderer>().sprite       = orangeCursorSprite;
                 break;
             case 3:
                 playerEntity.playerPrefab.GetComponent<SpriteRenderer>().sprite = greenPlayerSprite;
-                playerEntity.bulletPrefab.GetComponent<SpriteRenderer>().sprite = greenBulletSprite;
+                playerEntity.bulletPrefab                                       = greenBulletPrefab;
                 playerEntity.cursor.GetComponent<SpriteRenderer>().sprite       = greenCursorSprite;
                 break;
+        }
+    }
+
+    [Command]
+    private void CmdProduceAndScatterShards(int shardOwnerID, int shardCount, int shardValue) {
+        //Produce and Scatter Shards
+        for(int i = 0; i < shardCount; i++) {
+            GameObject shard = Instantiate(shardPrefab, playerPrefab.transform.position, Quaternion.identity);
+            float angle = Random.Range(-180, 180);
+
+            Vector3 direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad),
+                                            Mathf.Sin(angle * Mathf.Deg2Rad));
+
+            Shard shardEnity = shard.GetComponent<Shard>();
+
+            shardEnity.directionVector = direction;
+            shardEnity.ownerID = shardOwnerID;
+            shardEnity.shardValue = shardValue;
+
+            NetworkServer.Spawn(shard);
         }
     }
 

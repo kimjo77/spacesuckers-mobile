@@ -39,8 +39,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1223327301498812}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.3, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalPosition: {x: 4.38806, y: -0.12753844, z: 0}
+  m_LocalScale: {x: 4, y: 4, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -79,7 +79,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.13
+  m_Radius: 0.14
 --- !u!114 &114123862577181140
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -94,6 +94,7 @@ MonoBehaviour:
   health: 150
   damage: 300
   stun: 1.5
+  shardValue: 25
   shardCount: 3
   debrisCount: 2
   speed: 0

@@ -59,7 +59,7 @@ MonoBehaviour:
   m_BroadcastInterval: 1000
   m_UseNetworkManager: 0
   m_BroadcastData: HELLO
-  m_ShowGUI: 1
+  m_ShowGUI: 0
   m_OffsetX: 0
   m_OffsetY: 0
 --- !u!114 &114720668068709696
@@ -94,6 +94,10 @@ MonoBehaviour:
   - {fileID: 1752293194795910, guid: 14a5b20c169557e49abb8af0309e83c7, type: 2}
   - {fileID: 1567774482773222, guid: c52cf6ed35fc34e4eb851aee96dd6735, type: 2}
   - {fileID: 1293755374262260, guid: 049437412b593a34bae656921cc08f4b, type: 2}
+  - {fileID: 1943203451427076, guid: 833aa18ea59033d4590f2f99a43e3cd0, type: 2}
+  - {fileID: 1768551049488720, guid: dea2da2be65555d4bbe0fa3646f03d8b, type: 2}
+  - {fileID: 1137582612058906, guid: 5418f25f31460eb4cabcac28a7c50c2b, type: 2}
+  - {fileID: 1888216067101562, guid: 465fa215bd9581d4db77f98b25952c92, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -139,8 +143,8 @@ MonoBehaviour:
   m_Channels: 0500000000000000
   m_UseWebSockets: 0
   m_UseSimulator: 0
-  m_SimulatedLatency: 1
-  m_PacketLossPercentage: 0
+  m_SimulatedLatency: 150
+  m_PacketLossPercentage: 1
   m_MaxBufferedPackets: 16
   m_AllowFragmentation: 1
   m_MatchHost: mm.unet.unity3d.com
@@ -149,7 +153,7 @@ MonoBehaviour:
   matchSize: 4
   isNetworkActive: 0
   matchMaker: {fileID: 0}
-  m_ShowLobbyGUI: 1
+  m_ShowLobbyGUI: 0
   m_MaxPlayers: 4
   m_MaxPlayersPerConnection: 1
   m_MinPlayers: 1

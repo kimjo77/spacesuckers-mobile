@@ -10,7 +10,8 @@ public class Asteroid : NetworkBehaviour {
 
     public float stun = 3;
 
-    public int shardCount = 0;
+    public int  shardValue = 25,
+                shardCount = 0;
 
     public float debrisCount,
                  speed = 0,
@@ -36,7 +37,7 @@ public class Asteroid : NetworkBehaviour {
 
     private void OnTriggerEnter2D(Collider2D other) {
         if(other.gameObject.tag == "Entity") {
-            Bullet    bulletEntity    = other.gameObject.GetComponent<Bullet>();
+            Bullet bulletEntity = other.gameObject.GetComponent<Bullet>();
             Spaceship spaceshipEntity = other.gameObject.GetComponent<Spaceship>();
 
             if(bulletEntity != null) {
@@ -77,7 +78,7 @@ public class Asteroid : NetworkBehaviour {
                         }
                     }
 
-                    ProduceAndScatterShards(bulletEntity.owner);
+                    CmdProduceAndScatterShards(bulletEntity.ownerID);
 
                     Destroy(this.gameObject);
                 }
@@ -93,7 +94,8 @@ public class Asteroid : NetworkBehaviour {
         }
     }
 
-    private void ProduceAndScatterShards(GameObject shardOwner) {
+    [Command]
+    private void CmdProduceAndScatterShards(int shardOwnerID) {
         for(int i=0; i<shardCount; i++) {
             GameObject shard = Instantiate(shardPrefab, transform.position, Quaternion.identity);
             float angle = Random.Range(-180, 180);
@@ -101,8 +103,10 @@ public class Asteroid : NetworkBehaviour {
             Vector3 direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad),
                                             Mathf.Sin(angle * Mathf.Deg2Rad));
 
-            shard.GetComponent<Shard>().directionVector = direction;
-            shard.GetComponent<Shard>().owner = shardOwner.GetComponent<Player>().playerPrefab;
+            Shard shardEnity = shard.GetComponent<Shard>();
+            shardEnity.directionVector = direction;
+            shardEnity.ownerID = shardOwnerID;
+            shardEnity.shardValue = shardValue;
 
             NetworkServer.Spawn(shard);
         }
