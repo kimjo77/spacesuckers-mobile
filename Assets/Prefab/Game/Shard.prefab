@@ -112,11 +112,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shardValue: 50
   destroyTime: 30
-  smoothSpeed: 0.05
-  drag: 0.1
+  smoothSpeed: 0.1
+  drag: 0.2
   directionVector: {x: 0, y: 0, z: 0}
   minSpeed: 20
-  maxSpeed: 20
+  maxSpeed: 40
   ownerID: -1
 --- !u!114 &114587612715949478
 MonoBehaviour:

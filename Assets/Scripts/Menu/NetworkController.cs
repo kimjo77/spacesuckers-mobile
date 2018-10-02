@@ -10,6 +10,12 @@ public class NetworkController : MonoBehaviour {
     private Button buttonPrefab;
     public GameObject networkLobbyManagerPrefab;
 
+    public Sprite addRemoveShip,
+                  addShip,
+                  removeShip,
+                  ready,
+                  cancel;
+
 
     private void Start() {
         GameObject[] networkObjects = GameObject.FindGameObjectsWithTag("Network");
@@ -71,24 +77,26 @@ public class NetworkController : MonoBehaviour {
         }
     }
 
-    public void Ready(Text buttonReady) {
+    public void Ready(Button buttonReady) {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         for(int i=0; i<players.Length; i++) {
             NetworkLobbyPlayer networkLobbyPlayer = players[i].GetComponent<NetworkLobbyPlayer>();
             if(networkLobbyPlayer.isLocalPlayer) {
                 if(networkLobbyPlayer.readyToBegin) {
                     networkLobbyPlayer.SendNotReadyToBeginMessage();
-                    buttonReady.text = "Ready";
+                    //buttonReady.text = "Ready";
+                    buttonReady.GetComponent<Image>().sprite = ready;
                 } else {
                     networkLobbyPlayer.SendReadyToBeginMessage();
-                    buttonReady.text = "Cancel";
+                    //buttonReady.text = "Cancel";
+                    buttonReady.GetComponent<Image>().sprite = cancel;
                 }
                 break;
             }
         }
     }
 
-    public void AddRemovePlayer(Text buttonText) {
+    public void AddRemovePlayer(Button buttonText) {
         GameObject[] networkObjects = GameObject.FindGameObjectsWithTag("Network");
         if(networkObjects.Length == 1) {
             NetworkLobbyManager networkLobbyManager =  networkObjects[0].GetComponent<NetworkLobbyManager>();
@@ -101,7 +109,9 @@ public class NetworkController : MonoBehaviour {
                     isLocalPlayerFound = true;
                     if(networkLobbyPlayer.readyToBegin == false) {
                         ClientScene.RemovePlayer(networkLobbyPlayer.gameObject.GetComponent<NetworkIdentity>().playerControllerId);
-                        buttonText.text = "Add Player";
+                        //buttonText.text = "Add Ship";
+                        //buttonText.image.sprite = addShip;
+                        buttonText.GetComponent<Image>().sprite = addShip;
                     }
                     break;
                 }
@@ -109,7 +119,9 @@ public class NetworkController : MonoBehaviour {
 
             if(!isLocalPlayerFound) {
                 networkLobbyManager.TryToAddPlayer();
-                buttonText.text = "Remove Player";
+                //buttonText.text = "Remove Ship";
+                //buttonText.image.sprite = removeShip;
+                buttonText.GetComponent<Image>().sprite = removeShip;
             }
         } else if(networkObjects.Length == 0) {
             Debug.Log("Warning: Network Object doesn't Exist.");

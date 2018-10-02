@@ -217,6 +217,7 @@ public class Player : NetworkBehaviour {
     public IEnumerator DieRoutine() {
         yield return new WaitForSeconds(respawnTime);
         SetSpawnPoint();
+        playerPrefab.GetComponent<Spaceship>().ReInitialize();
         playerPrefab.gameObject.SetActive(true);
         isDead = false;
     }

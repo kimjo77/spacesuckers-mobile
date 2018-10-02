@@ -6,16 +6,22 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/Game/Game_Singleplayer.unity
-    guid: e0a322cad93ebc944abbd5b3fbb71051
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/Screens/Screen_Landing.unity
+    guid: c9b6c88e364f6f14a93d14ccf02be105
+  - enabled: 1
+    path: Assets/Scenes/Screens/Screen_PlayerModes.unity
+    guid: 0a45e18173cfa2c4b816a775b67d2007
   - enabled: 1
     path: Assets/Scenes/Screens/Screen_Multiplayer.unity
     guid: 0f9ad516266c0b741a52812005fa859a
   - enabled: 1
-    path: Assets/Scenes/Screens/Screen_Host.unity
+    path: Assets/Scenes/Screens/Screen_HostServer.unity
     guid: 8942760f65bbcdf40b8287929a23f14b
   - enabled: 1
-    path: Assets/Scenes/Screens/Screen_Join.unity
+    path: Assets/Scenes/Screens/Screen_JoinServer.unity
     guid: e59d92210df1d0d40a1fd5fff69f8b93
   - enabled: 1
     path: Assets/Scenes/Screens/Screen_Lobby.unity
