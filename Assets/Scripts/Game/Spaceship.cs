@@ -8,7 +8,12 @@ public class Spaceship : MonoBehaviour {
     public Player player;
 
     public int health = 1000;
+    public int defaultHealth = 1000;
     public float shardDeductionPercentage = 0.25f;
+
+    public void ReInitialize() {
+        health = defaultHealth;
+    }
 
     public void Damage(int damage) {
         if((health -= damage) <= 0) {

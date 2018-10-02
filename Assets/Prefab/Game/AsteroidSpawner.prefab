@@ -56,8 +56,8 @@ MonoBehaviour:
   asteroidPrefab: {fileID: 1223327301498812, guid: e4cd796b2a623f64e94885ee459974dc,
     type: 2}
   initialSpawnCount: 1
-  maxDistance: 18
-  minDistance: 22
+  maxDistance: 21
+  minDistance: 25
   asteroidInitialTime: 0
   asteroidSpawnTime: 0
   asteroidSpawnRate: 2

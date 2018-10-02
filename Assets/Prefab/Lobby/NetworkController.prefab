@@ -53,3 +53,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   networkLobbyManagerPrefab: {fileID: 1108360785970368, guid: 469d764b61851f6498c50a8ca3c97ece,
     type: 2}
+  addRemoveShip: {fileID: 21300000, guid: c90644d4e1704fc40b3fecbad71095e4, type: 3}
+  addShip: {fileID: 21300000, guid: da834399b62e2214593e2486712bc425, type: 3}
+  removeShip: {fileID: 21300000, guid: 486fa1d68833cb142a246ecaedd64bca, type: 3}
+  ready: {fileID: 21300000, guid: c2a9d46d6093c4444a895889441e331a, type: 3}
+  cancel: {fileID: 21300000, guid: c2a9d46d6093c4444a895889441e331a, type: 3}

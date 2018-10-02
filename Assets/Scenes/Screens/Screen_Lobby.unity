@@ -281,10 +281,10 @@ RectTransform:
   m_Father: {fileID: 2014459801}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 2, y: -28.1}
-  m_SizeDelta: {x: 201, y: 32.7}
+  m_AnchorMin: {x: 0.3584815, y: 0.85400003}
+  m_AnchorMax: {x: 0.64100003, y: 0.94000006}
+  m_AnchoredPosition: {x: 0.000030517578, y: 0.6000061}
+  m_SizeDelta: {x: 0.099975586, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1439042610
 MonoBehaviour:
@@ -329,8 +329,8 @@ MonoBehaviour:
         m_MethodName: AddRemovePlayer
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
+          m_ObjectArgument: {fileID: 1439042610}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -357,7 +357,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 74cab807c3f21064c9ba0d9f5e14f635, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c90644d4e1704fc40b3fecbad71095e4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -398,15 +398,15 @@ RectTransform:
   m_GameObject: {fileID: 1458456060}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2014459801}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 216.3, y: -26}
-  m_SizeDelta: {x: 122.75, y: 31.8}
+  m_AnchorMin: {x: 0.7885371, y: 0.86233336}
+  m_AnchorMax: {x: 0.987463, y: 0.97044456}
+  m_AnchoredPosition: {x: 0, y: 0.19998169}
+  m_SizeDelta: {x: -0.5, y: -0.5999985}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1458456062
 MonoBehaviour:
@@ -451,8 +451,8 @@ MonoBehaviour:
         m_MethodName: Ready
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
+          m_ObjectArgument: {fileID: 1458456062}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -562,15 +562,15 @@ RectTransform:
   m_GameObject: {fileID: 1603171371}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2014459801}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -214, y: -27}
-  m_SizeDelta: {x: 122.75, y: 31.800003}
+  m_AnchorMin: {x: 0.018000001, y: 0.85400003}
+  m_AnchorMax: {x: 0.21700001, y: 0.9620001}
+  m_AnchoredPosition: {x: -0.19999695, y: 0.2999878}
+  m_SizeDelta: {x: -0.5, y: -0.5999985}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1603171373
 MonoBehaviour:
@@ -707,7 +707,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 4.169323
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -766,7 +766,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vertexCount: 120
-  radius: 11.3
+  radius: 14.3
 --- !u!120 &1694114287
 LineRenderer:
   m_ObjectHideFlags: 0

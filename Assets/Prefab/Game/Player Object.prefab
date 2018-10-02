@@ -833,7 +833,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f60adff41896bc943b3ad6d4160de989, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shardLimit: 20
+  shardLimit: 10
   acceleration: 0.06
   drag: 0.1
   speed: 0
@@ -843,7 +843,7 @@ MonoBehaviour:
   velX: 0
   velY: 0
   dir: 0
-  maxRadius: 11
+  maxRadius: 14
   fireRate: 0.1
   canFire: 0
   respawnTime: 3

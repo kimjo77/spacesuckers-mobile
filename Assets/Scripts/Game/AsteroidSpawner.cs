@@ -7,7 +7,7 @@ public class AsteroidSpawner : NetworkBehaviour {
 
     public Global global;
     public GameObject asteroidPrefab;
-    public int initialSpawnCount;
+    public int initialSpawnCount = 1;
     public float maxDistance = 22f,
                  minDistance = 18f,
                  asteroidInitialTime,
@@ -47,7 +47,7 @@ public class AsteroidSpawner : NetworkBehaviour {
             }
         }
 
-        asteroidSpawnCount = ((Time.time - asteroidInitialTime) * spawnCountRate) + initialSpawnCount;
+        asteroidSpawnCount = (initialSpawnCount + ((Time.time - asteroidInitialTime) * spawnCountRate));
 	}
 
     private Vector2 GetRandomLocation() {
