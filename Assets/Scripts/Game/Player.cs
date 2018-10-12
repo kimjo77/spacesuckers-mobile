@@ -66,6 +66,8 @@ public class Player : NetworkBehaviour {
                   greenBulletSprite,
                   orangeBulletSprite;
 
+    public GameObject gameoverPanel;
+
     public Global global = null;
 
     public override void OnStartLocalPlayer() {
@@ -220,6 +222,12 @@ public class Player : NetworkBehaviour {
         playerPrefab.GetComponent<Spaceship>().ReInitialize();
         playerPrefab.gameObject.SetActive(true);
         isDead = false;
+    }
+
+    //--GameOver
+    public void Gameover() {
+        StopAllCoroutines();
+        gameoverPanel.SetActive(true);
     }
 
     [Command]

@@ -83,10 +83,12 @@ public class NetworkController : MonoBehaviour {
             NetworkLobbyPlayer networkLobbyPlayer = players[i].GetComponent<NetworkLobbyPlayer>();
             if(networkLobbyPlayer.isLocalPlayer) {
                 if(networkLobbyPlayer.readyToBegin) {
+                    Debug.Log(networkLobbyPlayer.netId);
                     networkLobbyPlayer.SendNotReadyToBeginMessage();
                     //buttonReady.text = "Ready";
                     buttonReady.GetComponent<Image>().sprite = ready;
                 } else {
+                    Debug.Log(networkLobbyPlayer.netId);
                     networkLobbyPlayer.SendReadyToBeginMessage();
                     //buttonReady.text = "Cancel";
                     buttonReady.GetComponent<Image>().sprite = cancel;
@@ -132,6 +134,12 @@ public class NetworkController : MonoBehaviour {
 
     public void Leave(GameObject leaveDialogBoxPrefab) {
         Instantiate(leaveDialogBoxPrefab);
+    }
+
+    public void Rematch() {
+        NetworkLobbyController networkController = FindNetworkLobbyController();
+        if(networkController == null) { return; }
+        networkController.manager.ServerChangeScene(networkController.manager.playScene);
     }
 
     private NetworkLobbyController FindNetworkLobbyController() {

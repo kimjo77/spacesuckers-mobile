@@ -10,7 +10,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(NetworkLobbyManager))]
 public class NetworkLobbyController : NetworkDiscovery {
 
-    private NetworkLobbyManager manager;
+    public NetworkLobbyManager manager;
     private Dictionary<string, string> lobbies_dictionary = new Dictionary<string, string>();
 
     void Awake() {

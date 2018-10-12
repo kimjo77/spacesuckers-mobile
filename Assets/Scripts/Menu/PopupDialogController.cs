@@ -25,11 +25,13 @@ public class PopupDialogController : MonoBehaviour {
                 NetworkLobbyPlayer networkLobbyPlayer = players[i].GetComponent<NetworkLobbyPlayer>();
                 if(networkLobbyPlayer.isLocalPlayer) {
                     if(networkLobbyPlayer.isServer) {
+                        Time.timeScale = 1;
                         networkLobbyManager.StopServer();
                         networkLobbyManager.StopClient();
                         Destroy(networkLobbyManager.gameObject);
                     } else if(!networkLobbyPlayer.isServer) {
                         networkLobbyManager.StopClient();
+                        Time.timeScale = 1;
                         Destroy(networkLobbyManager.gameObject);
                     } else {
                         Debug.Log("Warning: NetworkLobbyPlayer is Neither Server nor Client");
