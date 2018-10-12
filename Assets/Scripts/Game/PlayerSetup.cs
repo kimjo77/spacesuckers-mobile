@@ -9,17 +9,21 @@ public class PlayerSetup : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        for(int i=0; i<componentsToDisable.Length; i++) {
+        DisableComponents();
+    }
+	
+	// Update is called once per frame
+	void Update () {
+		
+	}
+
+    public void DisableComponents() {
+        for(int i = 0; i < componentsToDisable.Length; i++) {
             if(!isLocalPlayer) {
                 if(componentsToDisable[i] != null) {
                     componentsToDisable[i].enabled = false;
                 }
             }
         }
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    }
 }

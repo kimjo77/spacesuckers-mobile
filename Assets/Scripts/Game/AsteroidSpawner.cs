@@ -18,13 +18,20 @@ public class AsteroidSpawner : NetworkBehaviour {
                  difficultyTime = 1f,
                  difficultyRate = 3f;
     private bool isInitial = false;
+
     private void Start() {
-        asteroidSpawnTime = Time.time + asteroidSpawnTime;
+        isInitial = false;
+        asteroidSpawnTime = Time.time + 0;
         asteroidInitialTime = asteroidSpawnTime;
     }
 
     // Update is called once per frame
     void Update () {
+        if(global.isRestart) {
+            RpcRestart();
+            global.isRestart = false;
+        }
+
         if(global.isGameEnd) {
             return;
         }
@@ -33,11 +40,11 @@ public class AsteroidSpawner : NetworkBehaviour {
             return;
         } else if(!isInitial) {
             isInitial = true;
-            asteroidSpawnTime = Time.time + asteroidSpawnTime;
+            asteroidSpawnTime = Time.time + 0;
             asteroidInitialTime = asteroidSpawnTime;
         }
 
-        if(Time.time > asteroidSpawnTime) {
+        if(Time.time >= asteroidSpawnTime) {
             //Debug.Log(Mathf.FloorToInt(asteroidSpawnCount));
             for(int i=0; i< Mathf.FloorToInt(asteroidSpawnCount); i++) {
                 Vector2 location = GetRandomLocation();
@@ -46,9 +53,9 @@ public class AsteroidSpawner : NetworkBehaviour {
                 asteroidSpawnTime = Time.time + asteroidSpawnRate;
             }
         }
-
-        asteroidSpawnCount = (initialSpawnCount + ((Time.time - asteroidInitialTime) * spawnCountRate));
-	}
+        asteroidSpawnCount = ((Time.time - asteroidInitialTime) * spawnCountRate);
+        asteroidSpawnCount += initialSpawnCount;
+    }
 
     private Vector2 GetRandomLocation() {
         float angle = Random.Range(-180, 180);
@@ -56,5 +63,12 @@ public class AsteroidSpawner : NetworkBehaviour {
         float x = Mathf.Sin(Mathf.Deg2Rad * angle) * radius;
         float y = Mathf.Cos(Mathf.Deg2Rad * angle) * radius;
         return new Vector2(x,y);
+    }
+
+    [ClientRpc]
+    public void RpcRestart() {
+        isInitial = false;
+        asteroidSpawnTime = Time.time + 0;
+        asteroidInitialTime = asteroidSpawnTime;
     }
 }
