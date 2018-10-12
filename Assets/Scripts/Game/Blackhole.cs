@@ -20,8 +20,6 @@ public class Blackhole : NetworkBehaviour {
         GameObject[] entities = GameObject.FindGameObjectsWithTag("Entity");
         if(entities != null) {
             foreach(GameObject entity in entities) {
-                Vector3 directionVector = (entity.transform.position - transform.position);
-                float dist = Vector2.Distance(transform.position, entity.transform.position);
                 float dx, dy, angle;
                 dx = transform.position.x - entity.transform.position.x;
                 dy = transform.position.y - entity.transform.position.y;

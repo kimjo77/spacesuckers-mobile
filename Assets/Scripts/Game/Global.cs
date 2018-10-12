@@ -15,14 +15,22 @@ public class Global : NetworkBehaviour {
     private float GameCountdownTimer_Minutes = 5;
     private float GameCountdownTimer;
 
+    private float RestartCountdownInitial;
+    [SerializeField]
+    private float RestartCountdownTimer = 15;
+    private float RestartCountdownTime;
+
     public bool isCountDown = false,
                 isTimer = false,
                 isGameBegin = false,
-                isGameEnd = false;
+                isGameEnd = false,
+                isRestartCountdown = false;
+
+    [SyncVar]
+    public bool isRestart = false;
 
     private NetworkStartPosition[] spawnPoints;
     private Player[] players;
-    //private int[] playerPoints;
 
     [SyncVar]
     private int player1 = 0, 
@@ -39,13 +47,9 @@ public class Global : NetworkBehaviour {
         //setpositions for every spaceship
         for(int i=0; i<players.Length; i++) {
             players[i].playerPrefab.transform.position = spawnPoints[i].transform.position;
+            players[i].playerPrefab.SetActive(true);
+            players[i].playerPrefab.GetComponent<Spaceship>().ReInitialize();
         }
-
-        //initialize score for every player
-        /*playerPoints = new int[players.Length];
-        for(int i=0; i<playerPoints.Length; i++) {
-            playerPoints[i] = 0;
-        }*/
 
         //start timer for timer to start
         StartCountdownInitial = Time.time;
@@ -66,12 +70,68 @@ public class Global : NetworkBehaviour {
         if(isTimer) {
             if(Time.time >= GameCountdownTimer) {
                 isTimer = false;
+                isGameBegin = false;
                 isGameEnd = true;
+                initializeRestartTimer();
                 GameOver();
             }
         }
 
+        if(isGameEnd) {
+            if(Time.time >= RestartCountdownTime) {
+                isGameEnd = false;
+                isRestart = true;
+                Rematch();
+                RestartSyncVars();
+                Restart();
+
+                //Restart Asteroid
+                AsteroidSpawner asteroidSpawner = FindObjectOfType<AsteroidSpawner>();
+                if(isRestart && asteroidSpawner != null) {
+                    asteroidSpawner.RpcRestart();
+                    Debug.Log("Spawner finished Restart!");
+                }else {
+                    Debug.Log("Spawner Not Found!");
+                }
+            }
+        }
 	}
+
+    public void Restart() {
+
+        isCountDown = false;
+        isTimer = false;
+        isGameBegin = false;
+        isGameEnd = false;
+
+        //find all spawn points
+        spawnPoints = FindObjectsOfType<NetworkStartPosition>();
+        //find all players
+        players = FindObjectsOfType<Player>();
+
+        //setpositions for every spaceship
+        for(int i = 0; i < players.Length; i++) {
+            players[i].playerPrefab.transform.position = spawnPoints[i].transform.position;
+            players[i].playerPrefab.SetActive(true);
+            players[i].playerPrefab.GetComponent<Spaceship>().ReInitialize();
+        }
+
+        //start timer for timer to start
+        StartCountdownInitial = Time.time;
+        StartCountdownTime = StartCountdownInitial + StartCountdownTimer;
+        isCountDown = true;
+
+        Debug.Log("Restart Set!");
+    }
+
+    public void RestartSyncVars() {
+        player1 = 0;
+        player2 = 0;
+        player3 = 0;
+        player4 = 0;
+
+        Debug.Log("SyncVars Set!");
+    }
 
     public void initializeTimer() {
         //start timer countdown
@@ -80,6 +140,11 @@ public class Global : NetworkBehaviour {
         float minutesInSeconds = Mathf.Floor(GameCountdownTimer_Minutes) * 60;
         float leftSeconds = (GameCountdownTimer_Minutes - Mathf.Floor(GameCountdownTimer_Minutes)) * 60;
         GameCountdownTimer = GameCountdownInitial + minutesInSeconds + leftSeconds; //Seconds
+    }
+
+    public void initializeRestartTimer() {
+        RestartCountdownInitial = Time.time;
+        RestartCountdownTime = RestartCountdownInitial + RestartCountdownTimer;
     }
 
     public string getStartCountdownTimerTime() {
@@ -103,6 +168,17 @@ public class Global : NetworkBehaviour {
         float minutes = Mathf.Floor(remainingTime / 60);
         float seconds = remainingTime % 60;
         return (minutes + ":" + seconds.ToString("0.00"));
+    }
+
+    public string getRestartTimerTime() {
+        float remainingTime = RestartCountdownTime - Time.time;
+        float seconds = Mathf.Ceil(remainingTime);
+
+        if(seconds < 0) {
+            seconds = 0;
+        }
+
+        return ("Restart in... " + seconds);
     }
 
     public int GetScore(Player player) {
@@ -181,7 +257,6 @@ public class Global : NetworkBehaviour {
 
     public void GameOver() {
         //pause all entities.
-        //pause all entities.
         /*
          * player object
          * blackhole
@@ -192,8 +267,6 @@ public class Global : NetworkBehaviour {
          * bullets
          */
 
-        Time.timeScale = 0;
-
         GameObject[] gameObjects = FindObjectsOfType<GameObject>();
         foreach(GameObject gameObject in gameObjects) {
             Player    playerEntity    = gameObject.GetComponent<Player>();
@@ -202,7 +275,7 @@ public class Global : NetworkBehaviour {
             Shard     shardEntity     = gameObject.GetComponent<Shard>();
             Bullet    bulletEntity    = gameObject.GetComponent<Bullet>();
 
-            if(playerEntity != null) {
+            if(playerEntity != null && playerEntity.isLocalPlayer) {
                 playerEntity.enabled = false;
 
             } else if(blackholeEntity != null) {
@@ -216,6 +289,51 @@ public class Global : NetworkBehaviour {
 
             } else if(bulletEntity != null) {
                 bulletEntity.enabled = false;
+            }
+        }
+
+        players = FindObjectsOfType<Player>();
+
+        //Gameover
+        foreach(Player player in players) {
+            player.Gameover();
+        }
+    }
+
+    public void Rematch() {
+        //remove all unnecessary entities.
+        /*
+         * player object
+         * blackhole
+         * spaceship
+         * asteroids
+         * small asteroids
+         * shards
+         * bullets
+         */
+
+        GameObject[] gameObjects = FindObjectsOfType<GameObject>();
+        foreach(GameObject gameObject in gameObjects) {
+            Player playerEntity = gameObject.GetComponent<Player>();
+            Blackhole blackholeEntity = gameObject.GetComponent<Blackhole>();
+            Asteroid asteroidEntity = gameObject.GetComponent<Asteroid>();
+            Shard shardEntity = gameObject.GetComponent<Shard>();
+            Bullet bulletEntity = gameObject.GetComponent<Bullet>();
+
+            if(playerEntity != null && playerEntity.isLocalPlayer) {
+                playerEntity.enabled = true;
+
+            } else if(blackholeEntity != null) {
+                blackholeEntity.enabled = true;
+
+            } else if(asteroidEntity != null) {
+                Destroy(asteroidEntity.gameObject);
+
+            } else if(shardEntity != null) {
+                Destroy(shardEntity.gameObject);
+
+            } else if(bulletEntity != null) {
+                Destroy(bulletEntity.gameObject);
             }
         }
     }

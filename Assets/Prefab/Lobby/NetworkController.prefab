@@ -57,4 +57,4 @@ MonoBehaviour:
   addShip: {fileID: 21300000, guid: da834399b62e2214593e2486712bc425, type: 3}
   removeShip: {fileID: 21300000, guid: 486fa1d68833cb142a246ecaedd64bca, type: 3}
   ready: {fileID: 21300000, guid: c2a9d46d6093c4444a895889441e331a, type: 3}
-  cancel: {fileID: 21300000, guid: c2a9d46d6093c4444a895889441e331a, type: 3}
+  cancel: {fileID: 21300000, guid: 965d0c5f85b71eb418c888b16993cea1, type: 3}
